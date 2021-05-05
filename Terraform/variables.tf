@@ -2,18 +2,8 @@
 # Secrets
 # ---------------------------------------------------------------------------------------------------------------------
 
-variable "cloudflare_api_token" {
-  description = "Cloudflare API token"
-  sensitive   = true
-}
-
-variable "mongodb_password" {
-  description = "MongoDB Password"
-  sensitive   = true
-}
-
-variable "postgres_password" {
-  description = "Postgres SQL Password"
+variable "api_token" {
+  description = "API token"
   sensitive   = true
 }
 
@@ -43,25 +33,9 @@ variable "node_size" {
   description = "VM size"
 }
 
-variable "namespaces" {
-  description = "Kubernetes Namespaces"
-}
-
-variable "api_container_name" {
-  description = "Api Container Name."
-}
-
-variable "ui_container_name" {
-  description = "UI Container Name."
-}
-
 # ---------------------------------------------------------------------------------------------------------------------
 # Project
 # ---------------------------------------------------------------------------------------------------------------------
-
-variable "cloud_partner_id" {
-  description = "Azure Partner ID."
-}
 
 variable "client_id" {
   description = "Client ID ."
@@ -100,15 +74,6 @@ variable "kubernetes_subnet_name" {
 variable "kubernetes_subnet_address_prefix" {
   description = "Subnet address prefix."
 }
-
-variable "appgateway_subnet_name" {
-  description = "App Gateway Subnet Name."
-}
-
-variable "app_gateway_subnet_address_prefix" {
-  description = "Subnet server IP address."
-}
-
 variable "app_gateway_name" {
   description = "Name of the Application Gateway"
   default = "ApplicationGateway"
@@ -159,7 +124,7 @@ variable "tags" {
 
   default = {
     source = "terraform"
-    application = "bradmccoydev"
+    application = "reactorlab"
     owner = "bradmccoydev@gmail.com"
     environment = "Dev"
   }

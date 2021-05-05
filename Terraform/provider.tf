@@ -1,10 +1,9 @@
 terraform {
   backend "azurerm" {
-    features {}
-    resource_group_name  = "DEV"
-    storage_account_name = "poc"
-    container_name       = "tfstate"
-    key                  = "bradmccoydev.tfstate"
+    resource_group_name  = "terraformstate-rg"
+    storage_account_name = "k8sreactorlab"
+    container_name       = "reactorlab"
+    key                  = "aksreactorlab.tfstate"
   }
 }
 
@@ -13,7 +12,6 @@ provider "azurerm" {
   features {}
   alias = "azurerm-test"
   disable_terraform_partner_id = true
-  partner_id = var.cloud_partner_id
   skip_provider_registration = true
 }
 

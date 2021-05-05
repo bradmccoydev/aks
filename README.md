@@ -1,31 +1,37 @@
-# IAC for AKS
-For the initial deployment using terraform it will take 10 minutes. This will deploy all networking, cluster, secrets and namespaces.
+# Microsoft Reactor Lab - AKS
+This repository is for the Mircosoft Reactor Lab - Deploying .NET 5 Microservices to AKS using Terraform and Helm by Brad McCoy
 
-# CI/CD
-This Repository is configured to use Azure DevOps pipelines.  The pipeline file can be found in the root directory azure-pipelines.yml
+# Blog Link
+https://bradmccoydev.medium.com/deploying-net-5-microservices-to-aks-using-terraform-and-helm-f64d026b1569
 
-You will see that any pushes or pull requests to this repo on the main branch will trigger the pipeline.
+# Get free azure account
+https://azure.microsoft.com/en-us/free/
 
-There are 5 secrets configured as variables in the pipeline.
+# Configure Azure for Terraform State File
 
-1. ssh_key 
-This is used for the AKS Cluster used in kubernetes.tf
+Export variable with your own distinct name
+``` export STORAGE_ACCOUNT_NAME=k8sreactorlab ```
 
-2. aks_service_prinipal_client_secret
-This is the AKS service principal secret used in kubernetes.tf
+Create Resource Group
+``` az group create --location australiaeast --name terraformstate-rg ```
 
-3. CLOUDFLARE_API_TOKEN
-This is for the cloudflare API token used to talk with cert manager
+Create Storage Account
+``` az storage account create --name $STORAGE_ACCOUNT_NAME --resource-group terraformstate-rg --location australiaeast --sku Standard_LRS ```
 
-4. MONGODB_PASSWORD
-Mongodb password used in the api app
+Create Storage Container
+``` az storage container create --name reactorlab --account-name $STORAGE_ACCOUNT_NAME ```
 
-5. postgres_password
-Postgres password used in the backend
+Now the Storage account and container are created you need to update the terraform provider.tf with the values (storage_account_name, and container_name)
 
-Tasks
-1. Install our specific version of Terraform - 0.14.5
-2. Terraform Init
+# Provision Infra with Terraform
+Note: Im using terraform version 0.14.5
+
+Export Access Key from storage account
+``` export STORAGE_ACCOUNT_KEY=x ```
+
+Initalize Terraform (replace <name> with storage account from above)
+``` terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME" -backend-config="container_name=reactorlab" -backend-config="access_key=$STORAGE_ACCOUNT_KEY" -backend-config="key=aksreactorlab.tfstate" -upgrade ```
+
 3. Terraform Plan
 4. Terraform Validate & Apply
 
