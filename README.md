@@ -10,13 +10,13 @@ https://azure.microsoft.com/en-us/free/
 # Configure Azure for Terraform State File
 
 Export variable with your own distinct name
-``` export STORAGE_ACCOUNT_NAME=k8sreactorlab ```
+``` export STORAGE_ACCOUNT_NAME=aksreactorlab123 ```
 
 Create Resource Group
-``` az group create --location australiaeast --name terraformstate-rg ```
+``` az group create --location australiaeast --name terraformstate ```
 
 Create Storage Account
-``` az storage account create --name $STORAGE_ACCOUNT_NAME --resource-group terraformstate-rg --location australiaeast --sku Standard_LRS ```
+``` az storage account create --name $STORAGE_ACCOUNT_NAME --resource-group terraformstate --location australiaeast --sku Standard_LRS ```
 
 Create Storage Container
 ``` az storage container create --name reactorlab --account-name $STORAGE_ACCOUNT_NAME ```
@@ -27,7 +27,7 @@ Now the Storage account and container are created you need to update the terrafo
 Note: Im using terraform version 0.14.5
 
 Export Access Key from storage account
-``` export STORAGE_ACCOUNT_KEY=x ```
+``` export STORAGE_ACCOUNT_KEY=PCTyWoHuQajRkuD8+J7jqNjJEHZBEjiTtzpEzUzFcpn21MHLyW83ZCW2QFCebYgKThdXsJYvR8UE9CE6punWgg== ```
 
 Initalize Terraform (replace <name> with storage account from above)
 ``` terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME" -backend-config="container_name=reactorlab" -backend-config="access_key=$STORAGE_ACCOUNT_KEY" -backend-config="key=aksreactorlab.tfstate" -upgrade ```
