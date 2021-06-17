@@ -8,7 +8,6 @@ terraform {
 }
 
 provider "azurerm" {
-  version = "=1.44.0"
   features {}
   alias = "azurerm-test"
   partner_id = "d1e4547f-b660-46e1-a8fd-0189ab5ced8f"
