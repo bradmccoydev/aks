@@ -45,5 +45,8 @@ jobs:
     
     - name: Terraform Plan
       run: |-
+        ls
+        cd src
+        ls
         terraform plan -var-file=deployment/demo.tfvars -out $GITHUB_JOB-demo.tfplan
         terraform show -json $GITHUB_JOB-demo.tfplan > $GITHUB_JOB-demo.json
