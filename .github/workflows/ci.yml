@@ -16,14 +16,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: 58445e81-389a-46be-9b20-f98610b37262
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: f7b8d1c4-c52f-4aaf-8c24-860c2b1c9d0c
+      ARM_TENANT_ID: 1543c9b8-a1d1-4f26-bffb-1368aaeb582e
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    # - name: Azure Login
+    #   uses: azure/login@v1
+    #   with:
+    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
     
     - name: Install Terraform
       run: |-
