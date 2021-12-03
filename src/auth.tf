@@ -1,12 +1,12 @@
 module "random_string_suffix" {
-  source         = "git@github.com:odysseycloud/blueprints-modules.git//utils/random_string"
+  source         = "github.com/bradmccoydev/terraform-modules-modules.git//utils/random_string"
   length         = 4
   special        = false
   contains_upper = false
 }
 
 module "tls_private_key" {
-  source  = "git@github.com:odysseycloud/blueprints-modules.git//utils/tls_private_key"
+  source  = "github.com/bradmccoydev/terraform-modules-modules.git//utils/tls_private_key"
   algorithm = "RSA"
   rsa_bits = 4096
 }
