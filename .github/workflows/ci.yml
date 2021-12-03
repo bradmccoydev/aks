@@ -24,3 +24,26 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Install Terraform
+        run: |-
+          ls
+          pwd
+          if [ ! -f "terraform" ]; then
+              curl -SL "https://releases.hashicorp.com/terraform/1.0.11/terraform_1.0.11_linux_amd64.zip" --output terraform.zip
+              unzip "terraform.zip"
+              sudo mv terraform /usr/local/bin
+              rm terraform.zip
+          fi
+          terraform --version
+    
+    - name: Terraform Init
+        run: |-
+          ls
+          cd src
+          terraform init
+
+    - name: tfsec
+        uses: aquasecurity/tfsec-pr-commenter-action@main
+        with:
+          github_token: ${{ secrets.GIT_TOKEN }}

@@ -1,9 +1,9 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = "terraformstate"
-    storage_account_name = "aksreactorlab123"
-    container_name       = "reactorlab"
-    key                  = "aksreactorlab.tfstate"
+    resource_group_name  = "devops-prod"
+    storage_account_name = "moulainfrastate"
+    container_name       = "moula-training"
+    key                  = "hashicorp-lab.tfstate"
   }
 }
 
