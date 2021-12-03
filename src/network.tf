@@ -1,7 +1,7 @@
 resource "azurerm_virtual_network" "k8s" {
   name                = var.virtual_network_name
-  location            = azurerm_resource_group.k8s.location
-  resource_group_name = azurerm_resource_group.k8s.name
+  location            = azurerm_resource_group.default.location
+  resource_group_name = azurerm_resource_group.default.name
   address_space       = [var.virtual_network_address_prefix]
 
   subnet {
@@ -14,6 +14,6 @@ resource "azurerm_virtual_network" "k8s" {
 
 data "azurerm_subnet" "kubesubnet" {
   name                 = var.kubernetes_subnet_name
-  virtual_network_name = azurerm_virtual_network.k8s.name
-  resource_group_name  = azurerm_resource_group.k8s.name
+  virtual_network_name = azurerm_virtual_network.default.name
+  resource_group_name  = azurerm_resource_group.default.name
  }

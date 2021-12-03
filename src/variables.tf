@@ -1,131 +1,209 @@
-# ---------------------------------------------------------------------------------------------------------------------
-# Secrets
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "api_token" {
-  description = "API token"
-  sensitive   = true
+variable "client_id" {
+  description = "Client ID"
+  validation {
+    condition     = length(var.client_id) > 1 && length(var.client_id) < 12
+    error_message = "Client_id must be > 1 && < 12 characters."
+  }
 }
 
-# ---------------------------------------------------------------------------------------------------------------------
-# Kubernetes & Containers
-# ---------------------------------------------------------------------------------------------------------------------
+variable "client_name" {
+  description = "Client Name"
+  validation {
+    condition     = length(var.client_name) > 3 && length(var.client_name) < 13
+    error_message = "Client_name must be > 3 && < 13 characters."
+  }
+}
 
-variable "kubernetes_version" {
-  description = "Kubernetes version"
-  default     = "1.18.14"
+variable "client_project_id" {
+  description = "Project ID"
+  validation {
+    condition     = length(var.client_project_id) > 3 && length(var.client_project_id) < 12
+    error_message = "Client_project_id must be > 3 && < 12 characters."
+  }
+}
+
+variable "client_domain_url" {
+  description = "The Client Domain URL"
+}
+
+variable "client_environment" {
+  description = "Environment eg dev"
+}
+
+variable "client_project_admin" {
+  type        = string
+  description = "The Client Project Admin"
+}
+variable "client_budget_amount" {
+  description = "Monthly budget amount in AUD."
+  type = number
+}
+
+variable "client_project_repo" {
+  description = "Project source control repository"
+}
+
+variable "client_access_groups" {
+  description = "Client Access Groups"
+  default = []
+}
+variable "client_project_dependencies" {
+  description = "Project dependencies"
+  type        = list(string)
+}
+
+variable "cloud_tenant_id" {
+  description = "Tenant ID"
+  type        = string
+}
+
+variable "cloud_account_id" {
+  description = "Subscription ID"
+  type        = string
+}
+
+variable "cloud_multi_region" {
+  description = "Cloud Multi Region Region Required"
+  type        = bool
+}
+
+variable "cloud_location_1" {
+  description = "Cloud Location (region)"
+}
+
+variable "cloud_location_2" {
+  description = "Cloud Location (region)"
+}
+
+variable "cloud_partner_id" {
+  description = "Cloud partner id"
+  type        = string
+
+  validation {
+    condition     = length(split("-", var.cloud_partner_id)[0]) == 8 && length(split("-", var.cloud_partner_id)[1]) == 4 && length(split("-", var.cloud_partner_id)[2]) == 4 && length(split("-", var.cloud_partner_id)[3]) == 4 && length(split("-", var.cloud_partner_id)[4]) == 12
+    error_message = "Cloud_partner_id must be in this format: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX (8-4-4-4-12)."
+  }
+}
+
+variable "cloud_transient_instance" {
+  description = "The environment"
+}
+
+variable "cloud_custom_tags" {
+  type = map(string)
+}
+
+variable "cloud_credentials" {
+  type        = string
+  description = "Cloud Credentials"
+}
+
+variable "cloud_provider" {
+  type        = string
+  description = "The Cloud Provider [ AWS, Azure, GCP ]"
+}
+
+variable "cloud_iam_role" {
+  type        = string
+  description = "Cloud IAM Role"
+}
+
+variable "cloud_container_registry_enabled" {
+  description = "Container Registry Enabled"
+}
+
+# Cloud Location 1
+variable "cloud_location_1_bastion_enabled" {
+  description = "Cloud Bastion Enabled"
+}
+variable "cloud_location_1_network_cidr_range_bastion" {
+  type        = string
+  description = "Cloud Network CIDR Range"
+}
+
+variable "cloud_location_1_subnet_cidr_range_bastion_vm" {
+  type        = string
+  description = "Cloud Subnet Cidr Range Bastion VM"
+}
+
+variable "cloud_location_1_subnet_cidr_range_bastion_service" {
+  type        = string
+  description = "Cloud Subnet Cidr Range Bastion Service"
+}
+
+variable "cloud_location_1_network_cidr_range_kubernetes" {
+  type        = string
+  description = "Cloud Network CIDR Range"
+}
+
+variable "cloud_location_1_subnet_public_name_1" {
+  type        = string
+  description = "Cloud Location"
+}
+
+variable "cloud_location_1_subnet_public_cidr_1" {
+  type        = string
+  description = "Cloud Location"
+}
+
+# Cloud Location 2
+
+variable "cloud_location_2_bastion_enabled" {
+  description = "Cloud Bastion Enabled 2"
+}
+variable "cloud_location_2_network_cidr_range_bastion" {
+  type        = string
+  description = "Cloud Network CIDR Range 2"
+}
+
+variable "cloud_location_2_subnet_cidr_range_bastion_vm" {
+  type        = string
+  description = "Cloud Subnet Cidr Range Bastion VM 2"
+}
+
+variable "cloud_location_2_subnet_cidr_range_bastion_service" {
+  type        = string
+  description = "Cloud Subnet Cidr Range Bastion Service 2"
+}
+
+variable "cloud_location_2_network_cidr_range_kubernetes" {
+  type        = string
+  description = "Cloud Network CIDR Range 2"
+}
+
+variable "cloud_location_2_subnet_public_name_1" {
+  type        = string
+  description = "Cloud Location 2"
+}
+
+variable "cloud_location_2_subnet_public_cidr_1" {
+  type        = string
+  description = "Cloud Location 2 subnet"
+}
+
+# Kubernetes
+
+variable "kubernetes_node_size" {
+  type        = string
+  description = "Cloud Location"
 }
 
 variable "kubernetes_network_policy" {
-  description = "Kubernetes Network Policy."
+  type        = string
+  description = "Cloud Location"
 }
 
-variable "node_disk_size" {
-  description = "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 applies the default disk size for that agentVMSize."
-  default     = 30
+variable "kubernetes_node_disk_size" {
+  type        = string
+  description = "Cloud Location"
 }
 
-variable "node_count" {
-  description = "The number of agent nodes for the cluster."
+variable "kubernetes_initial_node_count" {
+  type        = string
+  description = "Cloud Location"
 }
 
-variable "node_size" {
-  description = "VM size"
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# Project
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "client_id" {
-  description = "Client ID ."
-}
-
-variable "project_id" {
-  description = "Project ID ."
-}
-
-variable "environment" {
-  description = "Environment."
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# Network
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "cloud_location" {
-  description = "Location of the cluster."
-  default = "Australia East"
-}
-
-variable "virtual_network_name" {
-  description = "Virtual network name"
-  default     = "aksVirtualNetwork"
-}
-
-variable "virtual_network_address_prefix" {
-  description = "VNET address prefix"
-}
-
-variable "kubernetes_subnet_name" {
-  description = "Subnet Name."
-}
-
-variable "kubernetes_subnet_address_prefix" {
-  description = "Subnet address prefix."
-}
-variable "app_gateway_name" {
-  description = "Name of the Application Gateway"
-  default = "ApplicationGateway"
-}
-
-variable "app_gateway_sku" {
-  description = "Name of the Application Gateway SKU"
-  default = "Standard_v2"
-}
-
-variable "app_gateway_tier" {
-  description = "Tier of the Application Gateway tier"
-  default = "Standard_v2"
-}
-
-variable "kubernetes_service_cidr" {
-  description = "CIDR notation IP range from which to assign service cluster IPs"
-  default     = "10.0.0.0/16"
-}
-
-variable "kubernetes_dns_service_ip" {
-  description = "DNS server IP address"
-  default     = "10.0.0.10"
-}
-
-variable "kubernetes_docker_bridge_cidr" {
-  description = "CIDR notation IP for Docker bridge."
-  default     = "172.17.0.1/16"
-}
-
-variable "kubernetes_enable_rbac" {
-  description = "Enable RBAC on the AKS cluster. Defaults to false."
-  default     = "false"
-}
-
-variable "vm_user_name" {
-  description = "User name for the VM"
-  default     = "bmccoy"
-}
-
-variable "public_ssh_key_path" {
-  description = "Public key path for SSH."
-  default     = "~/.ssh/id_rsa.pub"
-}
-
-variable "tags" {
-  type = map(string)
-
-  default = {
-    source = "terraform"
-    application = "reactorlab"
-    owner = "bradmccoydev@gmail.com"
-    environment = "Dev"
-  }
+variable "kubernetes_max_node_count" {
+  type        = string
+  description = "Cloud Location"
 }

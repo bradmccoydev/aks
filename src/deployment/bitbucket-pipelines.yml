@@ -1,0 +1,32 @@
+pipelines:
+  default:
+    - step:
+        name: prepare security report artifact
+        image: tfsec/tfsec
+        script:
+          - tfsec . || true
+          - tfsec . --format json >> tfsec-report.json || true
+          - cat tfsec-report.json
+        artifacts:
+            - tfsec-report.json
+    - step:
+        name: send slack message if vulnerabilities
+        image: bradmccoydev/tfsec:latest
+        script:
+          - /usr/bin/tfsec-analysis-terraform tfsec "$BITBUCKET_BUILD_NUMBER" "$BITBUCKET_GIT_HTTP_ORIGIN" "tfsec-report.json" "$SLACK_WEBHOOK"
+  pull-requests:
+    '**':
+      - step:
+          name: prepare security report artifact
+          image: tfsec/tfsec
+          script:
+            - tfsec . || true
+            - tfsec . --format json >> tfsec-report.json || true
+            - cat tfsec-report.json
+          artifacts:
+              - tfsec-report.json
+      - step:
+          name: send slack message if vulnerabilities
+          image: bradmccoydev/tfsec:latest
+          script:
+            - /usr/bin/tfsec-analysis-terraform tfsec "$BITBUCKET_PR_ID" "$BITBUCKET_GIT_HTTP_ORIGIN" "tfsec-report.json" "$SLACK_WEBHOOK"

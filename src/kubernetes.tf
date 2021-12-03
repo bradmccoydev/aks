@@ -1,7 +1,7 @@
 resource "azurerm_kubernetes_cluster" "k8s" {
     name                = "${var.client_id}-${var.project_id}-${var.environment}"
-    location            = azurerm_resource_group.k8s.location
-    resource_group_name = azurerm_resource_group.k8s.name
+    location            = azurerm_resource_group.default.location
+    resource_group_name = azurerm_resource_group.default.name
     dns_prefix          = "aks"
     kubernetes_version = var.kubernetes_version
 

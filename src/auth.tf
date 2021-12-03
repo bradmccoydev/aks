@@ -1,6 +1,14 @@
-resource "random_string" "aks_sp_secret" {
-  length  = 32
-  special = true
+module "random_string_suffix" {
+  source         = "git@github.com:odysseycloud/blueprints-modules.git//utils/random_string"
+  length         = 4
+  special        = false
+  contains_upper = false
+}
+
+module "tls_private_key" {
+  source  = "git@github.com:odysseycloud/blueprints-modules.git//utils/tls_private_key"
+  algorithm = "RSA"
+  rsa_bits = 4096
 }
 
 resource "azuread_application" "aks_sp" {
