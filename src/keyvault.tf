@@ -1,5 +1,5 @@
 module "azurerm_key_vault_primary" {
-  source = "github.com/bradmccoydev/terraform-modules.git//azurerm/azurerm_key_vault"
+  source = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_key_vault"
   count  = var.cloud_provider == "Azure" ? 1 : 0
   name                       = "${local.shared_name}-1qb5"
   resource_group_name        = module.azurerm_resource_group_hub[0].name
@@ -13,7 +13,7 @@ module "azurerm_key_vault_primary" {
 }
 
 module "azurerm_key_vault_access_policy_primary_groups" {
-  source = "https://github.com/bradmccoydev/terraform-modules.git//azurerm/azurerm_key_vault_access_policy"
+  source = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_key_vault_access_policy"
 
   for_each = toset(var.client_access_groups)
 
@@ -27,7 +27,7 @@ module "azurerm_key_vault_access_policy_primary_groups" {
 }
 
 module "azurerm_key_vault_secret_primary" {
-  source = "https://github.com/bradmccoydev/terraform-modules.git//azurerm/azurerm_key_vault_secret"
+  source = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_key_vault_secret"
   count  = var.cloud_provider == "Azure" ? 1 : 0
   depends_on = [
     module.azurerm_key_vault_access_policy_primary_groups[0]
