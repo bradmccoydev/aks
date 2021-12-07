@@ -1,48 +1,16 @@
-resource "azurerm_kubernetes_cluster" "k8s" {
-    name                = "${var.client_id}-${var.project_id}-${var.environment}"
-    location            = azurerm_resource_group.default.location
-    resource_group_name = azurerm_resource_group.default.name
-    dns_prefix          = "aks"
-    kubernetes_version = var.kubernetes_version
-
-    linux_profile {
-        admin_username = var.vm_user_name
-
-        ssh_key {
-            key_data = tls_private_key.default.public_key_openssh
-        }
-    }
-
-    node_resource_group = "${var.client_id}-${var.project_id}-${var.environment}-node"
-
-    default_node_pool {
-      name            = "agentpool"
-      node_count      = var.node_count
-      vm_size         = var.node_size
-      os_disk_size_gb = var.node_disk_size
-      vnet_subnet_id  = data.azurerm_subnet.kubesubnet.id
-    }
-
-    role_based_access_control {
-      enabled = true
-    }
-
-    addon_profile {
-    kube_dashboard {
-      enabled = true
-    }
-  }
-
-    service_principal {
-      client_id     = azuread_service_principal.aks_sp.application_id
-      client_secret = random_string.aks_sp_secret.result
-    }
-
-    network_profile {
-      network_plugin = "kubenet"
-      network_policy = var.kubernetes_network_policy
-    }
-
-    depends_on = [azurerm_virtual_network.k8s]
-    tags       = var.tags
+module "azurerm_kubernetes_cluster_primary" {
+  source                          = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_kubernetes_cluster"
+  name                            = local.primary_name
+  dns_prefix                      = "aks"
+  location                        = var.cloud_location_1.name
+  resource_group_name             = module.azurerm_resource_group.name
+  private_cluster_enabled         = false
+  kubernetes_network_plugin       = "azure"
+  kubernetes_network_policy       = var.kubernetes_network_policy
+  kubernetes_subnet_id            = module.azurerm_subnet_kubernetes.id
+  node_count                      = var.kubernetes_initial_node_count
+  node_size                       = var.kubernetes_node_size
+  node_disk_size                  = var.kubernetes_node_disk_size
+  enable_http_application_routing = false
+  tags                            = merge(local.tags, var.cloud_custom_tags)
 }

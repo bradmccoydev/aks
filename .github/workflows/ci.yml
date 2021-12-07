@@ -45,8 +45,13 @@ jobs:
     
     - name: Terraform Plan
       run: |-
-        ls
         cd src
-        ls
-        terraform plan -var-file=deployment/demo.tfvars -out $GITHUB_JOB-demo.tfplan
-        terraform show -json $GITHUB_JOB-demo.tfplan > $GITHUB_JOB-demo.json
+        #terraform plan -var-file=deployment/demo.tfvars -out $GITHUB_JOB.tfplan
+        #terraform show -json $GITHUB_JOB.tfplan > $GITHUB_JOB.json
+
+    - name: Terraform Apply
+      run: |-
+        cd src
+        TF_PLAN="$GITHUB_JOB.tfplan"
+        echo $TF_PLAN
+        # terraform apply $TF_PLAN 

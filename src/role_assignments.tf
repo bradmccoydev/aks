@@ -1,11 +1,13 @@
-# resource "azurerm_role_assignment" "network" {
-#   scope                = azurerm_kubernetes_cluster.k8s.id
-#   role_definition_name = "Network Contributor"
-#   principal_id         = azuread_service_principal.aks_sp.object_id
-# }
+module "azurerm_role_assignment_k8s_network_primary" {
+  source               = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_role_assignment"
+  role_definition_name = "Network Contributor"
+  scope                = module.azurerm_kubernetes_cluster_primary.id
+  principal_id         = module.azurerm_kubernetes_cluster_primary.principal_id
+}
 
-# resource "azurerm_role_assignment" "net_contributor_subnet" {
-#   role_definition_name = "Network Contributor"
-#   scope                = azurerm_virtual_network.k8s.id
-#   principal_id         = azuread_service_principal.aks_sp.object_id
-# }
+module "azurerm_role_assignment_network_primary" {
+  source               = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_role_assignment"
+  role_definition_name = "Network Contributor"
+  scope                = module.azurerm_virtual_network_primary.id
+  principal_id         = module.azurerm_kubernetes_cluster_primary.principal_id
+}

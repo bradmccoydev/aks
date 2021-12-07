@@ -1,19 +1,20 @@
-resource "azurerm_virtual_network" "k8s" {
-  name                = var.virtual_network_name
-  location            = azurerm_resource_group.default.location
-  resource_group_name = azurerm_resource_group.default.name
-  address_space       = [var.virtual_network_address_prefix]
-
-  subnet {
-    name           = var.kubernetes_subnet_name
-    address_prefix = var.kubernetes_subnet_address_prefix
-  }
-
-  tags = var.tags
+module "azurerm_virtual_network_primary" {
+  source              = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_virtual_network"
+  name                = local.primary_name
+  location            = var.cloud_location_1.name
+  resource_group_name = module.azurerm_resource_group.name
+  address_space       = var.cloud_location_1_network_cidr_range_kubernetes
+  tags                = merge(local.tags, var.cloud_custom_tags)
 }
 
-data "azurerm_subnet" "kubesubnet" {
-  name                 = var.kubernetes_subnet_name
-  virtual_network_name = azurerm_virtual_network.default.name
-  resource_group_name  = azurerm_resource_group.default.name
- }
+module "azurerm_subnet_kubernetes" {
+  source                                         = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_subnet"
+  name                                           = var.cloud_location_1_subnet_public_name_1
+  virtual_network_name                           = module.azurerm_virtual_network_primary.name
+  resource_group_name                            = module.azurerm_resource_group.name
+  address_prefixes                               = [var.cloud_location_1_subnet_public_cidr_1]
+  enforce_private_link_endpoint_network_policies = true
+  depends_on = [
+    module.azurerm_virtual_network_primary.name
+  ]
+}

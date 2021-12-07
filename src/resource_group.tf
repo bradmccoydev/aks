@@ -1,7 +1,5 @@
-module "azurerm_resource_group_hub" {
+module "azurerm_resource_group" {
   source   = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_resource_group"
-  count    = var.cloud_provider == "Azure" ? 1 : 0
-
   name     = local.shared_name
   location = var.cloud_location_1.name
 

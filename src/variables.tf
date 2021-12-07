@@ -22,10 +22,6 @@ variable "client_project_id" {
   }
 }
 
-variable "client_domain_url" {
-  description = "The Client Domain URL"
-}
-
 variable "client_environment" {
   description = "Environment eg dev"
 }
@@ -101,11 +97,6 @@ variable "cloud_credentials" {
 variable "cloud_provider" {
   type        = string
   description = "The Cloud Provider [ AWS, Azure, GCP ]"
-}
-
-variable "cloud_iam_role" {
-  type        = string
-  description = "Cloud IAM Role"
 }
 
 variable "cloud_container_registry_enabled" {

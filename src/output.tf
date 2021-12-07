@@ -1,3 +1,3 @@
-output "client_key" {
-    value = azurerm_kubernetes_cluster.k8s.kube_config.0.client_key
+output "kube_config" {
+    value = format("%s%s%s%s","az aks get-credentials --resource-group ", "devops-prod", " --name ", "devops-ause-prod")
 }
