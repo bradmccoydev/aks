@@ -16,10 +16,6 @@ variable "client_name" {
 
 variable "client_project_id" {
   description = "Project ID"
-  validation {
-    condition     = length(var.client_project_id) > 3 && length(var.client_project_id) < 12
-    error_message = "Client_project_id must be > 3 && < 12 characters."
-  }
 }
 
 variable "client_environment" {
@@ -89,11 +85,6 @@ variable "cloud_custom_tags" {
   type = map(string)
 }
 
-variable "cloud_credentials" {
-  type        = string
-  description = "Cloud Credentials"
-}
-
 variable "cloud_provider" {
   type        = string
   description = "The Cloud Provider [ AWS, Azure, GCP ]"
@@ -135,41 +126,6 @@ variable "cloud_location_1_subnet_public_name_1" {
 variable "cloud_location_1_subnet_public_cidr_1" {
   type        = string
   description = "Cloud Location"
-}
-
-# Cloud Location 2
-
-variable "cloud_location_2_bastion_enabled" {
-  description = "Cloud Bastion Enabled 2"
-}
-variable "cloud_location_2_network_cidr_range_bastion" {
-  type        = string
-  description = "Cloud Network CIDR Range 2"
-}
-
-variable "cloud_location_2_subnet_cidr_range_bastion_vm" {
-  type        = string
-  description = "Cloud Subnet Cidr Range Bastion VM 2"
-}
-
-variable "cloud_location_2_subnet_cidr_range_bastion_service" {
-  type        = string
-  description = "Cloud Subnet Cidr Range Bastion Service 2"
-}
-
-variable "cloud_location_2_network_cidr_range_kubernetes" {
-  type        = string
-  description = "Cloud Network CIDR Range 2"
-}
-
-variable "cloud_location_2_subnet_public_name_1" {
-  type        = string
-  description = "Cloud Location 2"
-}
-
-variable "cloud_location_2_subnet_public_cidr_1" {
-  type        = string
-  description = "Cloud Location 2 subnet"
 }
 
 # Kubernetes
