@@ -14,3 +14,14 @@ module "azurerm_kubernetes_cluster_primary" {
   enable_http_application_routing = false
   tags                            = merge(local.tags, var.cloud_custom_tags)
 }
+
+module "azurerm_kubernetes_cluster_node_pool_primary" {
+  source                = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_kubernetes_cluster_node_pool"
+  name                  = substr(replace(local.primary_name, "-", ""), 0, 12)
+  kubernetes_cluster_id = module.azurerm_kubernetes_cluster_primary.id
+  vm_size               = var.kubernetes_node_size
+  max_count             = 2
+  min_count             = 1
+
+  tags = merge(local.tags, var.cloud_custom_tags)
+}
