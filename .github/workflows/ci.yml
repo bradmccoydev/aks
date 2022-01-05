@@ -62,76 +62,16 @@ jobs:
         rm $GITHUB_SHA.json
         ls
 
-    - name: Upload Plan Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: TerraformPlan
-        path: "./src/${{ github.sha }}.tfplan"
-        retention-days: 1
-        if-no-files-found: error
-    
-  AutoDeploy:
-    runs-on: ubuntu-latest
-    needs: build
-    if: needs.build.outputs.VALIDATION_PASSED == 'true'
-    env:
-      ARM_CLIENT_ID: 58445e81-389a-46be-9b20-f98610b37262
-      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: f7b8d1c4-c52f-4aaf-8c24-860c2b1c9d0c
-      ARM_TENANT_ID: 1543c9b8-a1d1-4f26-bffb-1368aaeb582e
-
-    steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: TerraformPlan
-        path: './'
-    - name: Install Terraform
-      run: |-
-        ls
-        pwd
-        if [ ! -f "terraform" ]; then
-            curl -SL "https://releases.hashicorp.com/terraform/${{ env.TERRAFORM_VERSION }}/terraform_${{ env.TERRAFORM_VERSION }}_linux_amd64.zip" --output terraform.zip
-            unzip "terraform.zip"
-            sudo mv terraform /usr/local/bin
-            rm terraform.zip
-        fi
-        terraform --version
     - name: Terraform Auto Apply
+      if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'true'
       run: |-
         TF_PLAN="$GITHUB_SHA.tfplan"
         echo $TF_PLAN
         # terraform apply $TF_PLAN 
 
-  ManualDeploy:
-    runs-on: ubuntu-latest
-    needs: build
-    if: needs.build.outputs.VALIDATION_PASSED == 'false'
-    env:
-      ARM_CLIENT_ID: 58445e81-389a-46be-9b20-f98610b37262
-      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: f7b8d1c4-c52f-4aaf-8c24-860c2b1c9d0c
-      ARM_TENANT_ID: 1543c9b8-a1d1-4f26-bffb-1368aaeb582e
-    steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: TerraformPlan
-        path: './'
-    - name: Install Terraform
-      run: |-
-        ls
-        pwd
-        if [ ! -f "terraform" ]; then
-            curl -SL "https://releases.hashicorp.com/terraform/${{ env.TERRAFORM_VERSION }}/terraform_${{ env.TERRAFORM_VERSION }}_linux_amd64.zip" --output terraform.zip
-            unzip "terraform.zip"
-            sudo mv terraform /usr/local/bin
-            rm terraform.zip
-        fi
-        terraform --version
     - name: Terraform Manual Apply
+      if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'false'
       run: |-
         TF_PLAN="$GITHUB_SHA.tfplan"
         echo $TF_PLAN
-        ls
         # terraform apply $TF_PLAN 
