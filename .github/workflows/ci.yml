@@ -45,6 +45,7 @@ jobs:
     - name: Terraform Validate
       id: terraformValidate
       run: |-
+        cd src
         terraform show -json $GITHUB_JOB.tfplan > $GITHUB_JOB.json
         curl -sfLo app.env "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/v1.0.0/app.env"
         curl -sfLo opa-azure-policy.rego "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/v1.0.0/opa-azure-policy.rego"
@@ -60,7 +61,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: TerraformPlan
-        path: './$GITHUB_JOB.tfplan'
+        path: './src/$GITHUB_JOB.tfplan'
     
   AutoDeploy:
     runs-on: ubuntu-latest
