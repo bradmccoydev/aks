@@ -61,7 +61,6 @@ jobs:
         pwd
         rm $GITHUB_SHA.json
         ls
-        echo "./src/$GITHUB_SHA.tfplan"
 
     - name: Upload Plan Artifact
       uses: actions/upload-artifact@v2
@@ -134,4 +133,5 @@ jobs:
       run: |-
         TF_PLAN="$GITHUB_SHA.tfplan"
         echo $TF_PLAN
+        ls
         # terraform apply $TF_PLAN 
