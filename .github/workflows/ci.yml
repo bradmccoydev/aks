@@ -66,7 +66,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: TerraformPlan
-        path: './src/${{ GITHUB_JOB }}.tfplan'
+        path: './src/${{ env.GITHUB_JOB }}.tfplan'
         retention-days: 1
     
   AutoDeploy:
