@@ -61,13 +61,13 @@ jobs:
         pwd
         rm $GITHUB_SHA.json
         ls
-        echo "./src/${{ env.GITHUB_SHA }}.tfplan"
+        echo "./src/$GITHUB_SHA.tfplan"
 
     - name: Upload Plan Artifact
       uses: actions/upload-artifact@v2
       with:
         name: TerraformPlan
-        path: "./src/${{ env.GITHUB_SHA }}.tfplan"
+        path: "./*.tfplan"
         retention-days: 1
         if-no-files-found: error
     
