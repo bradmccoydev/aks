@@ -6,6 +6,10 @@ on:
 
   workflow_dispatch:
 
+env:
+  TERRAFORM_VERSION: "1.0.11"
+  TERRAFORM_PLAN_VALIDATOR_RELEASE_VERSION: "1.0.11"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,7 +29,7 @@ jobs:
         ls
         pwd
         if [ ! -f "terraform" ]; then
-            curl -SL "https://releases.hashicorp.com/terraform/1.0.11/terraform_1.0.11_linux_amd64.zip" --output terraform.zip
+            curl -SL "https://releases.hashicorp.com/terraform/${{ env.TERRAFORM_VERSION }}/terraform_${{ env.TERRAFORM_VERSION }}_linux_amd64.zip" --output terraform.zip
             unzip "terraform.zip"
             sudo mv terraform /usr/local/bin
             rm terraform.zip
@@ -47,9 +51,9 @@ jobs:
       run: |-
         cd src
         terraform show -json $GITHUB_JOB.tfplan > $GITHUB_JOB.json
-        curl -sfLo app.env "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/v1.0.0/app.env"
-        curl -sfLo opa-azure-policy.rego "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/v1.0.0/opa-azure-policy.rego"
-        curl -sfLo terraform-plan-validator-amd64 "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/v1.0.0/terraform-plan-validator-amd64"
+        curl -sfLo app.env "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/${{env.TERRAFORM_PLAN_VALIDATOR_RELEASE_VERSION}}/app.env"
+        curl -sfLo opa-azure-policy.rego "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/${{env.TERRAFORM_PLAN_VALIDATOR_RELEASE_VERSION}}/opa-azure-policy.rego"
+        curl -sfLo terraform-plan-validator-amd64 "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/${{env.TERRAFORM_PLAN_VALIDATOR_RELEASE_VERSION}}/terraform-plan-validator-amd64"
         chmod a+x ./terraform-plan-validator-amd64
         ls
         ./terraform-plan-validator-amd64 check "$GITHUB_JOB.json" "azure" >> validation-check.txt
@@ -84,7 +88,7 @@ jobs:
         ls
         pwd
         if [ ! -f "terraform" ]; then
-            curl -SL "https://releases.hashicorp.com/terraform/1.0.11/terraform_1.0.11_linux_amd64.zip" --output terraform.zip
+            curl -SL "https://releases.hashicorp.com/terraform/${{ env.TERRAFORM_VERSION }}/terraform_${{ env.TERRAFORM_VERSION }}_linux_amd64.zip" --output terraform.zip
             unzip "terraform.zip"
             sudo mv terraform /usr/local/bin
             rm terraform.zip
@@ -116,7 +120,7 @@ jobs:
         ls
         pwd
         if [ ! -f "terraform" ]; then
-            curl -SL "https://releases.hashicorp.com/terraform/1.0.11/terraform_1.0.11_linux_amd64.zip" --output terraform.zip
+            curl -SL "https://releases.hashicorp.com/terraform/${{ env.TERRAFORM_VERSION }}/terraform_${{ env.TERRAFORM_VERSION }}_linux_amd64.zip" --output terraform.zip
             unzip "terraform.zip"
             sudo mv terraform /usr/local/bin
             rm terraform.zip
