@@ -3,8 +3,6 @@ name: CI
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
   workflow_dispatch:
 
@@ -16,7 +14,8 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: f7b8d1c4-c52f-4aaf-8c24-860c2b1c9d0c
       ARM_TENANT_ID: 1543c9b8-a1d1-4f26-bffb-1368aaeb582e
-
+    outputs:
+      VALIDATION_PASSED: ${{ steps.terraformValidate.outputs.VALIDATION_PASSED }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -41,12 +40,88 @@ jobs:
     - name: Terraform Plan
       run: |-
         cd src
-        #terraform plan -var-file=deployment/demo.tfvars -out $GITHUB_JOB.tfplan
-        #terraform show -json $GITHUB_JOB.tfplan > $GITHUB_JOB.json
+        terraform plan -var-file=deployment/demo.tfvars -out $GITHUB_JOB.tfplan
+        terraform show -json $GITHUB_JOB.tfplan > $GITHUB_JOB.json
 
-    - name: Terraform Apply
+    - name: Terraform Validate
+      id: terraformValidate
       run: |-
-        cd src
+        curl -sfLo app.env "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/v1.0.0/app.env"
+        curl -sfLo opa-azure-policy.rego "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/v1.0.0/opa-azure-policy.rego"
+        curl -sfLo terraform-plan-validator-amd64 "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/v1.0.0/terraform-plan-validator-amd64"
+        chmod a+x ./terraform-plan-validator-amd64
+        ./terraform-plan-validator-amd64 check "$GITHUB_JOB.json" "azure" >> validation-check.txt
+        VALIDATION_PASSED=$(tail -1 validation-check.txt)
+        echo "::set-output name=VALIDATION_PASSED::$VALIDATION_PASSED"
+        rm $GITHUB_JOB.json
+
+    - name: Upload Plan Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: TerraformPlan
+        path: './$GITHUB_JOB.tfplan'
+    
+  AutoDeploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: needs.build.outputs.VALIDATION_PASSED == 'true'
+    env:
+      ARM_CLIENT_ID: 58445e81-389a-46be-9b20-f98610b37262
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: f7b8d1c4-c52f-4aaf-8c24-860c2b1c9d0c
+      ARM_TENANT_ID: 1543c9b8-a1d1-4f26-bffb-1368aaeb582e
+
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: TerraformPlan
+        path: './'
+    - name: Install Terraform
+      run: |-
+        ls
+        pwd
+        if [ ! -f "terraform" ]; then
+            curl -SL "https://releases.hashicorp.com/terraform/1.0.11/terraform_1.0.11_linux_amd64.zip" --output terraform.zip
+            unzip "terraform.zip"
+            sudo mv terraform /usr/local/bin
+            rm terraform.zip
+        fi
+        terraform --version
+    - name: Terraform Auto Apply
+      run: |-
+        TF_PLAN="$GITHUB_JOB.tfplan"
+        echo $TF_PLAN
+        # terraform apply $TF_PLAN 
+
+  ManualDeploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: needs.build.outputs.VALIDATION_PASSED == 'false'
+    env:
+      ARM_CLIENT_ID: 58445e81-389a-46be-9b20-f98610b37262
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: f7b8d1c4-c52f-4aaf-8c24-860c2b1c9d0c
+      ARM_TENANT_ID: 1543c9b8-a1d1-4f26-bffb-1368aaeb582e
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: TerraformPlan
+        path: './'
+    - name: Install Terraform
+      run: |-
+        ls
+        pwd
+        if [ ! -f "terraform" ]; then
+            curl -SL "https://releases.hashicorp.com/terraform/1.0.11/terraform_1.0.11_linux_amd64.zip" --output terraform.zip
+            unzip "terraform.zip"
+            sudo mv terraform /usr/local/bin
+            rm terraform.zip
+        fi
+        terraform --version
+    - name: Terraform Manual Apply
+      run: |-
         TF_PLAN="$GITHUB_JOB.tfplan"
         echo $TF_PLAN
         # terraform apply $TF_PLAN 
