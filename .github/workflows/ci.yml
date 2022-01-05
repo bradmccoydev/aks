@@ -65,7 +65,7 @@ jobs:
     - name: Upload Plan Artifact
       uses: actions/upload-artifact@v2
       env:
-        FILENAME: ${{env.GITHUB_JOB}}.tfplan
+        FILENAME: build.tfplan
       with:
         name: TerraformPlan
         path: './src/${{ env.FILENAME }}'
