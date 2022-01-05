@@ -50,12 +50,17 @@ jobs:
       id: terraformValidate
       run: |-
         cd src
+        pwd
+        echo "Doing terraform show"
         terraform show -json $GITHUB_JOB.tfplan > $GITHUB_JOB.json
+        ls
+        echo "Doing curl"
         curl -sfLo app.env "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/${{env.TERRAFORM_PLAN_VALIDATOR_RELEASE_VERSION}}/app.env"
         curl -sfLo opa-azure-policy.rego "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/${{env.TERRAFORM_PLAN_VALIDATOR_RELEASE_VERSION}}/opa-azure-policy.rego"
         curl -sfLo terraform-plan-validator-amd64 "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/${{env.TERRAFORM_PLAN_VALIDATOR_RELEASE_VERSION}}/terraform-plan-validator-amd64"
         chmod a+x ./terraform-plan-validator-amd64
         ls
+        echo "Doing validator"
         ./terraform-plan-validator-amd64 check "$GITHUB_JOB.json" "azure" >> validation-check.txt
         VALIDATION_PASSED=$(tail -1 validation-check.txt)
         echo "::set-output name=VALIDATION_PASSED::$VALIDATION_PASSED"
