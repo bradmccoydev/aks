@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]  
 
   workflow_dispatch:
 
@@ -70,10 +70,6 @@ jobs:
         name: TerraformPlan
         path: './src/${{ env.FILENAME }}'
         retention-days: 1
-      run: |-
-        pwd && ls *.tfplan
-        echo $FILENAME
-        echo $GITHUB_JOB
     
   AutoDeploy:
     runs-on: ubuntu-latest
