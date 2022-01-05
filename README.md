@@ -1,19 +1,22 @@
+![passing](https://github.com/bradmccoydev/aks/actions/workflows/ci.yml/badge.svg) ![GitHub](https://img.shields.io/github/license/bradmccoydev/aks)
 # AKS Labs
+This repo is used for our Azure Kubernetes Service Labs mostly in the Microsoft Reactor and Hashicorp community group
 
-Videos for this repo
-
+## Video Links
 * [Hasicorp Community - Creating an AKS Cluster with Terraform](https://www.youtube.com/watch?v=K7Ku6p3nI_c)
 * [Implementing Azure Front Door with Multi-Region AKS Clusters - Part 1](https://www.youtube.com/watch?v=wMwsCeFdwnI)
 * [Implementing Azure Front Door with Multi-Region AKS Clusters - Part 2](https://www.youtube.com/watch?v=f4q1TqwsX_k)
 * [Mircosoft Reactor Lab - Deploying .NET 5 Microservices to AKS](https://www.youtube.com/watch?v=BLu8swd2i_g)
 
-# Blog Link
-https://bradmccoydev.medium.com/deploying-net-5-microservices-to-aks-using-terraform-and-helm-f64d026b1569
+## Blog Links
+* [How to get Certified in Terraform](https://blog.bradmccoy.io/devops-journey-how-to-get-certified-in-terraform-c0bce1caa3d)
+* [Deploying .NET Microservices using Terraform and Helm](https://blog.bradmccoy.io/deploying-net-5-microservices-to-aks-using-terraform-and-helm-f64d026b1569)
 
-# Get free azure account
+## Get free azure account
 https://azure.microsoft.com/en-us/free/
 
-# Configure Azure for Terraform State File
+## Configure Azure for Terraform State File
+If you look at the src/provider.tf file. you will see that we are using an Azure backend to store state. If you want an Azure backend you can add a storage account with the commands below otherwise remove the backend params and you can use local state.
 
 Export variable with your own distinct name
 ``` export STORAGE_ACCOUNT_NAME=aksreactorlab123 ```
@@ -29,18 +32,13 @@ Create Storage Container
 
 Now the Storage account and container are created you need to update the terraform provider.tf with the values (storage_account_name, and container_name)
 
-# Provision Infra with Terraform
-Note: Im using terraform version 0.14.5
+## Provision Infra with Terraform
 
-Export Access Key from storage account
-``` export STORAGE_ACCOUNT_KEY=PCTyWoHuQajRkuD8+J7jqNjJEHZBEjiTtzpEzUzFcpn21MHLyW83ZCW2QFCebYgKThdXsJYvR8UE9CE6punWgg== ```
-
-Initalize Terraform (replace <name> with storage account from above)
-``` terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME" -backend-config="container_name=reactorlab" -backend-config="access_key=$STORAGE_ACCOUNT_KEY" -backend-config="key=aksreactorlab.tfstate" -upgrade ```
+1. Terraform init
+``` terraform init -var-file=deployment/demo.tfvars  ```
 
 3. Terraform Plan
-4. Terraform Validate & Apply
+``` terraform plan -var-file=deployment/demo.tfvars ```
 
-# Local Requirements
-Terraform 0.14.5
-Azure CLI
+4. Terraform Apply
+``` terraform apply -var-file=deployment/demo.tfvars ```
