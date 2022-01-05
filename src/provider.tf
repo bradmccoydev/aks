@@ -3,7 +3,7 @@ terraform {
     resource_group_name  = "devops-prod"
     storage_account_name = "moulainfrastate"
     container_name       = "moula-training"
-    key                  = "hashicorp-lab.tfstate"
+    key                  = "hug-lab.tfstate"
   }
 }
 

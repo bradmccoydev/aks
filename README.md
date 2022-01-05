@@ -1,5 +1,11 @@
-# Microsoft Reactor Lab - AKS
-This repository is for the Mircosoft Reactor Lab - Deploying .NET 5 Microservices to AKS using Terraform and Helm by Brad McCoy
+# AKS Labs
+
+Videos for this repo
+
+* [Hasicorp Community - Creating an AKS Cluster with Terraform](https://www.youtube.com/watch?v=K7Ku6p3nI_c)
+* [Implementing Azure Front Door with Multi-Region AKS Clusters - Part 1](https://www.youtube.com/watch?v=wMwsCeFdwnI)
+* [Implementing Azure Front Door with Multi-Region AKS Clusters - Part 2](https://www.youtube.com/watch?v=f4q1TqwsX_k)
+* [Mircosoft Reactor Lab - Deploying .NET 5 Microservices to AKS](https://www.youtube.com/watch?v=BLu8swd2i_g)
 
 # Blog Link
 https://bradmccoydev.medium.com/deploying-net-5-microservices-to-aks-using-terraform-and-helm-f64d026b1569
