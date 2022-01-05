@@ -64,10 +64,16 @@ jobs:
 
     - name: Upload Plan Artifact
       uses: actions/upload-artifact@v2
+      env:
+        FILENAME: ${{env.GITHUB_JOB}}.tfplan
       with:
         name: TerraformPlan
-        path: './src/${{ env.GITHUB_JOB }}.tfplan'
+        path: './src/${{ env.FILENAME }}'
         retention-days: 1
+      run: |-
+        pwd && ls *.tfplan
+        echo $FILENAME
+        echo $GITHUB_JOB
     
   AutoDeploy:
     runs-on: ubuntu-latest
