@@ -37,7 +37,7 @@ jobs:
         if [ ! -f "terraform" ]; then
             curl -SL "https://releases.hashicorp.com/terraform/${{ env.TERRAFORM_VERSION }}/terraform_${{ env.TERRAFORM_VERSION }}_linux_amd64.zip" --output terraform.zip
             unzip "terraform.zip"
-            sudo mv terraform /usr/local/bin
+            mv terraform /usr/local/bin
             rm terraform.zip
         fi
         terraform --version
