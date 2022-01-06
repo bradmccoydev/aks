@@ -12,8 +12,8 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container: bradmccoydev/terraform-plan-validator
+    runs-on: "bradmccoydev/terraform-plan-validator:latest"
+    container: node:10.16-jessie
     env:
       ARM_CLIENT_ID: 58445e81-389a-46be-9b20-f98610b37262
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -37,7 +37,7 @@ jobs:
         if [ ! -f "terraform" ]; then
             curl -SL "https://releases.hashicorp.com/terraform/${{ env.TERRAFORM_VERSION }}/terraform_${{ env.TERRAFORM_VERSION }}_linux_amd64.zip" --output terraform.zip
             unzip "terraform.zip"
-            mv terraform /usr/local/bin
+            sudo mv terraform /usr/local/bin
             rm terraform.zip
         fi
         terraform --version
@@ -57,16 +57,11 @@ jobs:
       run: |-
         cd src
         terraform show -json $GITHUB_SHA.tfplan > $GITHUB_SHA.json
-        curl -sfLo app.env "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/${{env.TERRAFORM_PLAN_VALIDATOR_RELEASE_VERSION}}/app.env"
-        curl -sfLo opa-azure-policy.rego "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/${{env.TERRAFORM_PLAN_VALIDATOR_RELEASE_VERSION}}/opa-azure-policy.rego"
-        curl -sfLo terraform-plan-validator-amd64 "https://github.com/bradmccoydev/terraform-plan-validator/releases/download/${{env.TERRAFORM_PLAN_VALIDATOR_RELEASE_VERSION}}/terraform-plan-validator-amd64"
-        chmod a+x ./terraform-plan-validator-amd64
-        ./terraform-plan-validator-amd64 check "$GITHUB_SHA.json" "azure" >> validation-check.txt
+        check -p "$GITHUB_SHA.json" -c "azure" >> validation-check.txt
         VALIDATION_PASSED=$(tail -1 validation-check.txt)
         echo "::set-output name=VALIDATION_PASSED::$VALIDATION_PASSED"
-        pwd
+        echo "Validation result: $VALIDATION_PASSED"
         rm $GITHUB_SHA.json
-        ls
 
     - name: Terraform Auto Apply
       if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'true'
