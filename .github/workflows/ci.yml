@@ -41,8 +41,10 @@ jobs:
         cd src
         terraform show -json $GITHUB_SHA.tfplan > $GITHUB_SHA.json
         ls
-        /usr/bin/terraform-plan-validator check -p "$GITHUB_SHA.json" -c "azure" > validation-check.txt
-        VALIDATION_PASSED=$(tail -1 validation-check.txt)
+        echo $GITHUB_SHA.json
+        /usr/bin/terraform-plan-validator check -p "$GITHUB_SHA.json" -c "azure"
+        # VALIDATION_PASSED=$(tail -1 validation-check.txt)
+        echo "validation finished"
         echo "::set-output name=VALIDATION_PASSED::$VALIDATION_PASSED"
         echo "Validation result: $VALIDATION_PASSED"
         rm $GITHUB_SHA.json
