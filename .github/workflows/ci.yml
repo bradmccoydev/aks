@@ -38,11 +38,12 @@ jobs:
     - name: Terraform Validate
       id: terraformValidate
       run: |-
+        pwd
         ls
         cd src
         terraform show -json $GITHUB_SHA.tfplan > $GITHUB_SHA.json
-        cp ../app.env ./app.env
-        cp ../opa-azure-policy.rego ./opa-azure-policy.rego
+        cp /terraform-plan-validator/app.env ./app.env
+        cp /terraform-plan-validator/opa-azure-policy.rego ./opa-azure-policy.rego
         /usr/bin/terraform-plan-validator check -p "$GITHUB_SHA.json" -c "azure"
         # VALIDATION_PASSED=$(tail -1 validation-check.txt)
         echo "validation finished"
