@@ -27,7 +27,7 @@ jobs:
     - name: Generate TFSEC report
       run: |-
         cd $PATH_TO_TF_FILES
-        tfsec . 
+        tfsec . --soft-fail
         
     - name: Terraform Plan
       run: |-
