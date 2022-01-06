@@ -13,6 +13,7 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: f7b8d1c4-c52f-4aaf-8c24-860c2b1c9d0c
       ARM_TENANT_ID: 1543c9b8-a1d1-4f26-bffb-1368aaeb582e
+      PATH_TO_TF_FILES: ./src
       
     steps:
     - name: Checkout
@@ -20,18 +21,18 @@ jobs:
     
     - name: Terraform Init
       run: |-
-        cd src
+        cd $PATH_TO_TF_FILES
         terraform init
     
     - name: Terraform Plan
       run: |-
-        cd src
+        cd $PATH_TO_TF_FILES
         terraform plan -var-file=deployment/demo.tfvars -out $GITHUB_SHA.tfplan
 
     - name: Terraform Validate
       id: terraformValidate
       run: |-
-        cd src
+        cd $PATH_TO_TF_FILES
         terraform show -json $GITHUB_SHA.tfplan > $GITHUB_SHA.json
         cp /terraform-plan-validator/app.env ./app.env
         cp /terraform-plan-validator/opa-azure-policy.rego ./opa-azure-policy.rego
@@ -47,6 +48,7 @@ jobs:
     - name: Terraform Auto Apply
       if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'true'
       run: |-
+        cd $PATH_TO_TF_FILES
         TF_PLAN="$GITHUB_SHA.tfplan"
         echo $TF_PLAN
         # terraform apply $TF_PLAN 
@@ -55,6 +57,7 @@ jobs:
     - name: Terraform Manual Apply
       if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'false'
       run: |-
+        cd $PATH_TO_TF_FILES
         TF_PLAN="$GITHUB_SHA.tfplan"
         echo $TF_PLAN
         # terraform apply $TF_PLAN 
