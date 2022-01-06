@@ -4,12 +4,6 @@ on:
   push:
     branches: [ main ]  
 
-  workflow_dispatch:
-
-env:
-  TERRAFORM_VERSION: "1.0.11"
-  TERRAFORM_PLAN_VALIDATOR_RELEASE_VERSION: "v1.0.0"
-
 jobs:
   build:
     runs-on: "ubuntu-latest"
@@ -19,8 +13,7 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: f7b8d1c4-c52f-4aaf-8c24-860c2b1c9d0c
       ARM_TENANT_ID: 1543c9b8-a1d1-4f26-bffb-1368aaeb582e
-    outputs:
-      VALIDATION_PASSED: ${{ steps.terraformValidate.outputs.VALIDATION_PASSED }}
+      
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -45,6 +38,7 @@ jobs:
 
         VALIDATION_PASSED=$(/usr/bin/terraform-plan-validator check -p "$GITHUB_SHA.json" -c "azure")
         SCORE=$(/usr/bin/terraform-plan-validator opascore -p "$GITHUB_SHA.json" -c "azure")
+        
         echo "::set-output name=VALIDATION_PASSED::$VALIDATION_PASSED"
         echo "Validation result: $VALIDATION_PASSED"
         echo "OPA score: $SCORE"
@@ -56,6 +50,7 @@ jobs:
         TF_PLAN="$GITHUB_SHA.tfplan"
         echo $TF_PLAN
         # terraform apply $TF_PLAN 
+        rm $TF_PLAN
 
     - name: Terraform Manual Apply
       if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'false'
@@ -63,3 +58,4 @@ jobs:
         TF_PLAN="$GITHUB_SHA.tfplan"
         echo $TF_PLAN
         # terraform apply $TF_PLAN 
+        rm $TF_PLAN
