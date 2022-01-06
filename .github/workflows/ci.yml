@@ -44,9 +44,10 @@ jobs:
         cp /terraform-plan-validator/opa-azure-policy.rego ./opa-azure-policy.rego
 
         VALIDATION_PASSED=$(/usr/bin/terraform-plan-validator check -p "$GITHUB_SHA.json" -c "azure")
-
+        SCORE=$(/usr/bin/terraform-plan-validator opascore -p "$GITHUB_SHA.json" -c "azure")
         echo "::set-output name=VALIDATION_PASSED::$VALIDATION_PASSED"
         echo "Validation result: $VALIDATION_PASSED"
+        echo "OPA score: $SCORE"
         rm $GITHUB_SHA.json
 
     - name: Terraform Auto Apply
