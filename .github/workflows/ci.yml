@@ -23,7 +23,12 @@ jobs:
       run: |-
         cd $PATH_TO_TF_FILES
         terraform init
-    
+        
+    - name: Generate TFSEC report
+      run: |-
+        cd $PATH_TO_TF_FILES
+        tfsec . 
+        
     - name: Terraform Plan
       run: |-
         cd $PATH_TO_TF_FILES
@@ -44,11 +49,6 @@ jobs:
         echo "Validation result: $VALIDATION_PASSED"
         echo "OPA score: $SCORE"
         rm $GITHUB_SHA.json
-        
-    - name: Generate TFSEC report
-      run: |-
-        cd $PATH_TO_TF_FILES
-        tfsec .
 
     - name: Terraform Auto Apply
       if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'true'
