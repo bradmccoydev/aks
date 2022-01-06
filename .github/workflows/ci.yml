@@ -29,18 +29,6 @@ jobs:
       run: |-
         pwd
         ls 
-
-    - name: Install Terraform
-      run: |-
-        ls
-        pwd
-        if [ ! -f "terraform" ]; then
-            curl -SL "https://releases.hashicorp.com/terraform/${{ env.TERRAFORM_VERSION }}/terraform_${{ env.TERRAFORM_VERSION }}_linux_amd64.zip" --output terraform.zip
-            unzip "terraform.zip"
-            mv terraform /usr/local/bin
-            rm terraform.zip
-        fi
-        terraform --version
     
     - name: Terraform Init
       run: |-
