@@ -12,7 +12,8 @@ env:
 
 jobs:
   build:
-    runs-on: "bradmccoydev/terraform-plan-validator:latest"
+    runs-on: ubuntu-latest
+    container: bradmccoydev/terraform-plan-validator
     env:
       ARM_CLIENT_ID: 58445e81-389a-46be-9b20-f98610b37262
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
