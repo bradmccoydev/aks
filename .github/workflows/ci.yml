@@ -22,12 +22,11 @@ jobs:
     - name: Terraform Init
       run: |-
         cd $PATH_TO_TF_FILES
-        terraform 1.0.11 init
+        terraform init
         
     - name: Generate TFSEC report
       run: |-
         cd $PATH_TO_TF_FILES
-        terraform 1.0.11 init
         tfsec . 
         
     - name: Terraform Plan
