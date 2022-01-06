@@ -25,11 +25,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     
-    - name: Debug
-      run: |-
-        pwd
-        ls 
-    
     - name: Terraform Init
       run: |-
         cd src
