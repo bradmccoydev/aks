@@ -44,6 +44,7 @@ jobs:
         terraform show -json $GITHUB_SHA.tfplan > $GITHUB_SHA.json
         cp /terraform-plan-validator/app.env ./app.env
         cp /terraform-plan-validator/opa-azure-policy.rego ./opa-azure-policy.rego
+
         /usr/bin/terraform-plan-validator check -p "$GITHUB_SHA.json" -c "azure"
         # VALIDATION_PASSED=$(tail -1 validation-check.txt)
         echo "validation finished"
