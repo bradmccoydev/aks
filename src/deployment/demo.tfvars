@@ -24,7 +24,7 @@ cloud_location_1_subnet_cidr_range_bastion_service = "10.0.1.0/24"
 
 cloud_location_1_network_cidr_range_kubernetes = "10.1.0.0/16"
 cloud_location_1_subnet_public_name_1          = "kubernetes"
-cloud_location_1_subnet_public_cidr_1          = "10.1.10.0/23"
+cloud_location_1_subnet_public_cidr_1          = "10.1.10.0/21"
 
 kubernetes_node_size          = "Standard_A4"
 kubernetes_network_policy     = "azure"

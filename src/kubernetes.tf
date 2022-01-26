@@ -20,8 +20,8 @@ module "azurerm_kubernetes_cluster_node_pool_primary" {
   name                  = substr(replace(local.primary_name, "-", ""), 0, 12)
   kubernetes_cluster_id = module.azurerm_kubernetes_cluster_primary.id
   vm_size               = var.kubernetes_node_size
+  min_count             = 2
   max_count             = 2
-  min_count             = 1
   kubernetes_subnet_id  = module.azurerm_subnet_kubernetes.id
 
   tags = merge(local.tags, var.cloud_custom_tags)
