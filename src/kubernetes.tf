@@ -27,37 +27,37 @@ module "azurerm_kubernetes_cluster_node_pool_primary" {
   tags = merge(local.tags, var.cloud_custom_tags)
 }
 
-resource "kubernetes_namespace" "ci-cd" {
-  metadata {
-    labels = {
-      managed-by = "terraform"
-    }
+# resource "kubernetes_namespace" "ci-cd" {
+#   metadata {
+#     labels = {
+#       managed-by = "terraform"
+#     }
 
-    name = "ci-cd"
-  }
-}
+#     name = "ci-cd"
+#   }
+# }
 
-resource "kubernetes_secret" "argocd" {
-  depends_on = [
-    kubernetes_namespace.ci-cd
-  ]
-  type = "Opaque"
-  metadata {
-    name      = module.azurerm_kubernetes_cluster_primary.name
-    namespace = "ci-cd"
-    labels = {
-      "argocd.argoproj.io/secret-type" = "cluster"
-    }
-  }
-  data = {
-    name   = module.azurerm_kubernetes_cluster_primary.name
-    server = module.azurerm_kubernetes_cluster_primary.fqdn
-    config = jsonencode({
-      "bearerToken" : module.azurerm_kubernetes_cluster_primary.kube_config.0.password
-      "tlsClientConfig" : {
-        "insecure" : false,
-        "caData" : module.azurerm_kubernetes_cluster_primary.kube_config.0.cluster_ca_certificate
-      }
-    })
-  }
-}
+# resource "kubernetes_secret" "argocd" {
+#   depends_on = [
+#     kubernetes_namespace.ci-cd
+#   ]
+#   type = "Opaque"
+#   metadata {
+#     name      = module.azurerm_kubernetes_cluster_primary.name
+#     namespace = "ci-cd"
+#     labels = {
+#       "argocd.argoproj.io/secret-type" = "cluster"
+#     }
+#   }
+#   data = {
+#     name   = module.azurerm_kubernetes_cluster_primary.name
+#     server = module.azurerm_kubernetes_cluster_primary.fqdn
+#     config = jsonencode({
+#       "bearerToken" : module.azurerm_kubernetes_cluster_primary.kube_config.0.password
+#       "tlsClientConfig" : {
+#         "insecure" : false,
+#         "caData" : module.azurerm_kubernetes_cluster_primary.kube_config.0.cluster_ca_certificate
+#       }
+#     })
+#   }
+# }
