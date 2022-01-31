@@ -43,16 +43,8 @@ Now the Storage account and container are created you need to update the terrafo
 4. Terraform Apply
 ``` terraform apply -var-file=deployment/demo.tfvars ```
 
-cd src && terraform init -var-file=deployment/ortelius/devops/prod.tfvars -backend-config="resource_group_name=devops-prod" -backend-config="storage_account_name=orteliusdevops" -backend-config="container_name=infrastate"
--backend-config="key=ortelius-devops.tfstate"
+cd src && terraform init -var-file=deployment/ortelius/devops/prod.tfvars -backend-config="resource_group_name=devops-prod" -backend-config="storage_account_name=orteliusdevops" -backend-config="container_name=infrastate" -backend-config="key=ortelius-devops.tfstate"
 
-  backend "azurerm" {
-    resource_group_name  = "devops-prod"
-    storage_account_name = "or"
-    container_name       = "moula-training"
-    key                  = "hug-lab.tfstate"
-  }
+terraform plan -var-file=deployment/devopstfvars 
 
-terraform plan -var-file=deployment/ortelius/devops/prod.tfvars 
-
-terraform apply -var-file=deployment/ortelius/devops/prod.tfvars 
+terraform apply -var-file=deployment/devops.tfvars 
