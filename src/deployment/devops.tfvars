@@ -1,8 +1,8 @@
 # Client Variables
-client_id                   = "hashicorp"
-client_name                 = "hashicorp"
-client_project_id           = "tf"
-client_environment          = "demo"
+client_id                   = "ortelius"
+client_name                 = "ortelius"
+client_project_id           = "devops"
+client_environment          = "prod"
 client_project_admin        = "bradmccoydev@gmail.com"
 client_budget_amount        = 0
 client_project_repo         = "https://github.com/bradmccoydev/aks"
@@ -11,13 +11,13 @@ client_project_dependencies = []
 
 # Cloud Variables
 cloud_provider                   = "Azure"
-cloud_account_id                 = "f7b8d1c4-c52f-4aaf-8c24-860c2b1c9d0c"
+cloud_account_id                 = "57b482cf-3355-4f0c-8adb-6d6bbb1b2cf7"
 cloud_multi_region               = false
 cloud_custom_tags                = {}
 cloud_transient_instance         = true
 cloud_container_registry_enabled = false
 
-cloud_location_1_bastion_enabled                   = false
+cloud_location_1_bastion_enabled                   = true
 cloud_location_1_network_cidr_range_bastion        = "10.0.0.0/16"
 cloud_location_1_subnet_cidr_range_bastion_vm      = "10.0.0.0/24"
 cloud_location_1_subnet_cidr_range_bastion_service = "10.0.1.0/24"
