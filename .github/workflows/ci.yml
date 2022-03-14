@@ -33,6 +33,22 @@ jobs:
       run: |-
         cd $PATH_TO_TF_FILES
         terraform plan -var-file=deployment/demo.tfvars -out $GITHUB_SHA.tfplan
+        terraform show -json $GITHUB_SHA.tfplan > plan.json
+
+    - name: Setup Infracost
+        uses: infracost/actions/setup@v1
+        with:
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
+
+    - name: Generate Infracost JSON
+      run: infracost breakdown --path plan.json --format json --out-file /tmp/infracost.json
+      working-directory: ${{ env.working-directory }}
+
+    - name: Post Infracost comment
+      uses: infracost/actions/comment@v1
+      with:
+        path: /tmp/infracost.json
+        behavior: update
 
     - name: Terraform Validate
       id: terraformValidate
