@@ -40,15 +40,15 @@ jobs:
       with:
         api-key: ${{ secrets.INFRACOST_API_KEY }}
 
-    - name: Generate Infracost JSON
-      run: infracost breakdown --path plan.json --format json --out-file /tmp/infracost.json
-      working-directory: ${{ env.working-directory }}
+    # - name: Generate Infracost JSON
+    #   run: infracost breakdown --path plan.json --format json --out-file /tmp/infracost.json
+    #   working-directory: ${{ env.working-directory }}
 
-    - name: Post Infracost comment
-      uses: infracost/actions/comment@v1
-      with:
-        path: /tmp/infracost.json
-        behavior: update
+    # - name: Post Infracost comment
+    #   uses: infracost/actions/comment@v1
+    #   with:
+    #     path: /tmp/infracost.json
+    #     behavior: update
 
     - name: Terraform Validate
       id: terraformValidate
