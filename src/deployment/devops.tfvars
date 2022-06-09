@@ -31,9 +31,9 @@ cloud_location_1_network_cidr_range_kubernetes = "10.1.0.0/16"
 cloud_location_1_subnet_public_name_1          = "kubernetes"
 cloud_location_1_subnet_public_cidr_1          = "10.1.0.0/21"
 
-kubernetes_node_size          = "Standard_B2ms"
+kubernetes_node_size          = "Standard_B4ms"
 kubernetes_network_policy     = "azure"
 kubernetes_node_disk_size     = 30
-kubernetes_initial_node_count = 5
-kubernetes_max_node_count     = 5
+kubernetes_initial_node_count = 2
+kubernetes_max_node_count     = 2
 
