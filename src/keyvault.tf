@@ -1,6 +1,6 @@
 module "azurerm_key_vault_primary" {
   source = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_key_vault"
-  name                       = "${local.shared_name}-aks"
+  name                       = "${local.shared_name}-ortelius"
   resource_group_name        = module.azurerm_resource_group.name
   location                   = var.cloud_location_1.name
   tenant_id                  = var.cloud_tenant_id
