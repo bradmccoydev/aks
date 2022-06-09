@@ -35,6 +35,12 @@ jobs:
         terraform plan -var-file=deployment/devops.tfvars -out $GITHUB_SHA.tfplan
         terraform show -json $GITHUB_SHA.tfplan > plan.json
 
+    - name: Terraform Apply
+      run: |-
+        cd $PATH_TO_TF_FILES
+        TF_PLAN="$GITHUB_SHA.tfplan"
+        terraform apply $TF_PLAN 
+
     # - name: Setup Infracost
     #   uses: infracost/actions/setup@v1
     #   with:
