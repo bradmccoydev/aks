@@ -9,10 +9,10 @@ jobs:
     runs-on: "ubuntu-latest"
     container: bradmccoydev/terraform-plan-validator:latest
     env:
-      ARM_CLIENT_ID: 58445e81-389a-46be-9b20-f98610b37262
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: f7b8d1c4-c52f-4aaf-8c24-860c2b1c9d0c
-      ARM_TENANT_ID: 1543c9b8-a1d1-4f26-bffb-1368aaeb582e
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       PATH_TO_TF_FILES: ./src
       
     steps:
@@ -35,10 +35,10 @@ jobs:
         terraform plan -var-file=deployment/demo.tfvars -out $GITHUB_SHA.tfplan
         terraform show -json $GITHUB_SHA.tfplan > plan.json
 
-    - name: Setup Infracost
-      uses: infracost/actions/setup@v1
-      with:
-        api-key: ${{ secrets.INFRACOST_API_KEY }}
+    # - name: Setup Infracost
+    #   uses: infracost/actions/setup@v1
+    #   with:
+    #     api-key: ${{ secrets.INFRACOST_API_KEY }}
 
     # - name: Generate Infracost JSON
     #   run: infracost breakdown --path plan.json --format json --out-file /tmp/infracost.json
@@ -50,36 +50,36 @@ jobs:
     #     path: /tmp/infracost.json
     #     behavior: update
 
-    - name: Terraform Validate
-      id: terraformValidate
-      run: |-
-        cd $PATH_TO_TF_FILES
-        terraform show -json $GITHUB_SHA.tfplan > $GITHUB_SHA.json
-        cp /terraform-plan-validator/app.env ./app.env
-        cp /terraform-plan-validator/opa-azure-policy.rego ./opa-azure-policy.rego
+    # - name: Terraform Validate
+    #   id: terraformValidate
+    #   run: |-
+    #     cd $PATH_TO_TF_FILES
+    #     terraform show -json $GITHUB_SHA.tfplan > $GITHUB_SHA.json
+    #     cp /terraform-plan-validator/app.env ./app.env
+    #     cp /terraform-plan-validator/opa-azure-policy.rego ./opa-azure-policy.rego
 
-        VALIDATION_PASSED=$(terraform-plan-validator check -p "$GITHUB_SHA.json" -c "azure")
-        SCORE=$(terraform-plan-validator opascore -p "$GITHUB_SHA.json" -c "azure")
+    #     VALIDATION_PASSED=$(terraform-plan-validator check -p "$GITHUB_SHA.json" -c "azure")
+    #     SCORE=$(terraform-plan-validator opascore -p "$GITHUB_SHA.json" -c "azure")
         
-        echo "::set-output name=VALIDATION_PASSED::$VALIDATION_PASSED"
-        echo "Validation result: $VALIDATION_PASSED"
-        echo "OPA score: $SCORE"
-        rm $GITHUB_SHA.json
+    #     echo "::set-output name=VALIDATION_PASSED::$VALIDATION_PASSED"
+    #     echo "Validation result: $VALIDATION_PASSED"
+    #     echo "OPA score: $SCORE"
+    #     rm $GITHUB_SHA.json
 
-    - name: Terraform Auto Apply
-      if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'true'
-      run: |-
-        cd $PATH_TO_TF_FILES
-        TF_PLAN="$GITHUB_SHA.tfplan"
-        echo $TF_PLAN
-        # terraform apply $TF_PLAN 
-        rm $TF_PLAN
+    # - name: Terraform Auto Apply
+    #   if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'true'
+    #   run: |-
+    #     cd $PATH_TO_TF_FILES
+    #     TF_PLAN="$GITHUB_SHA.tfplan"
+    #     echo $TF_PLAN
+    #     # terraform apply $TF_PLAN 
+    #     rm $TF_PLAN
 
-    - name: Terraform Manual Apply
-      if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'false'
-      run: |-
-        cd $PATH_TO_TF_FILES
-        TF_PLAN="$GITHUB_SHA.tfplan"
-        echo $TF_PLAN
-        # terraform apply $TF_PLAN 
-        rm $TF_PLAN
+    # - name: Terraform Manual Apply
+    #   if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'false'
+    #   run: |-
+    #     cd $PATH_TO_TF_FILES
+    #     TF_PLAN="$GITHUB_SHA.tfplan"
+    #     echo $TF_PLAN
+    #     # terraform apply $TF_PLAN 
+    #     rm $TF_PLAN
