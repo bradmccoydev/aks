@@ -32,7 +32,7 @@ jobs:
     - name: Terraform Plan
       run: |-
         cd $PATH_TO_TF_FILES
-        terraform plan -var-file=deployment/demo.tfvars -out $GITHUB_SHA.tfplan
+        terraform plan -var-file=deployment/devops.tfvars -out $GITHUB_SHA.tfplan
         terraform show -json $GITHUB_SHA.tfplan > plan.json
 
     # - name: Setup Infracost
