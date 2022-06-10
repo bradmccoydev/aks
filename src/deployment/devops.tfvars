@@ -18,8 +18,8 @@ cloud_transient_instance         = true
 cloud_container_registry_enabled = false
 
 cloud_location_1 = {
-  name = "West US 2"
-  alias = "usws"
+  name = "Central US"
+  alias = "usce"
 }
 
 cloud_location_1_bastion_enabled                   = true
