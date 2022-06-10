@@ -15,17 +15,17 @@ module "azurerm_kubernetes_cluster_primary" {
   tags                            = merge(local.tags, var.cloud_custom_tags)
 }
 
-module "azurerm_kubernetes_cluster_node_pool_primary" {
-  source                = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_kubernetes_cluster_node_pool"
-  name                  = substr(replace(local.primary_name, "-", ""), 0, 12)
-  kubernetes_cluster_id = module.azurerm_kubernetes_cluster_primary.id
-  vm_size               = var.kubernetes_node_size
-  min_count             = 2
-  max_count             = 2
-  kubernetes_subnet_id  = module.azurerm_subnet_kubernetes.id
+# module "azurerm_kubernetes_cluster_node_pool_primary" {
+#   source                = "github.com/bradmccoydev/terraform-modules//azurerm/azurerm_kubernetes_cluster_node_pool"
+#   name                  = substr(replace(local.primary_name, "-", ""), 0, 12)
+#   kubernetes_cluster_id = module.azurerm_kubernetes_cluster_primary.id
+#   vm_size               = var.kubernetes_node_size
+#   min_count             = 2
+#   max_count             = 2
+#   kubernetes_subnet_id  = module.azurerm_subnet_kubernetes.id
 
-  tags = merge(local.tags, var.cloud_custom_tags)
-}
+#   tags = merge(local.tags, var.cloud_custom_tags)
+# }
 
 # resource "kubernetes_namespace" "ci-cd" {
 #   metadata {
