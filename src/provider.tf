@@ -1,6 +1,6 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = "devops-prod"
+    resource_group_name  = "Ortelius-administrator"
     storage_account_name = "orteliusinfrastate"
     container_name       = "prod"
     key                  = "prod.tfstate"

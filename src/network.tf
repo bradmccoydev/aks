@@ -13,5 +13,4 @@ module "azurerm_subnet_kubernetes" {
   virtual_network_name                           = module.azurerm_virtual_network_primary.name
   resource_group_name                            = module.azurerm_resource_group.name
   address_prefixes                               = [var.cloud_location_1_subnet_public_cidr_1]
-  enforce_private_link_endpoint_network_policies = true
 }

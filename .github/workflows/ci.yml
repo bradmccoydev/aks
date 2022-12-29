@@ -13,42 +13,52 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-      PATH_TO_TF_FILES: ./src
+      TF_WORKING_DIRECTORY: ./src
       
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    - name: Terraform validate
+      run: terraform validate
+      working-directory: ${{ env.TF_WORKING_DIRECTORY }}
     
     - name: Terraform Init
       run: |-
-        cd $PATH_TO_TF_FILES
-        terraform init
+        terraform init -var-file=deployment/devops.tfvars -backend-config="resource_group_name=Ortelius-administrator" -backend-config="storage_account_name=orteliusinfrastate" -backend-config="container_name=prod" -backend-config="key=prod.tfstate"
+      working-directory: ${{ env.TF_WORKING_DIRECTORY }}
         
     - name: Generate TFSEC report
       run: |-
-        cd $PATH_TO_TF_FILES
-        tfsec . --soft-fail
+        tfsec . --soft-fail --tfvars-file deployment/devops.tfvars
+      working-directory: ${{ env.TF_WORKING_DIRECTORY }}
         
     - name: Terraform Plan
       run: |-
-        cd $PATH_TO_TF_FILES
-        terraform plan -var-file=deployment/demo.tfvars -out $GITHUB_SHA.tfplan
+        terraform plan -var-file=deployment/devops.tfvars -out $GITHUB_SHA.tfplan
         terraform show -json $GITHUB_SHA.tfplan > plan.json
+      working-directory: ${{ env.TF_WORKING_DIRECTORY }}
 
-    # - name: Setup Infracost
-    #   uses: infracost/actions/setup@v1
-    #   with:
-    #     api-key: ${{ secrets.INFRACOST_API_KEY }}
+    # - name: Terraform Apply
+    #   run: |-
+    #     TF_PLAN="$GITHUB_SHA.tfplan"
+    #     terraform apply $TF_PLAN
+    #   working-directory: ${{ env.TF_WORKING_DIRECTORY }}
 
-    # - name: Generate Infracost JSON
-    #   run: infracost breakdown --path plan.json --format json --out-file /tmp/infracost.json
-    #   working-directory: ${{ env.working-directory }}
+    - name: Setup Infracost
+      uses: infracost/actions/setup@v1
+      with:
+        api-key: ${{ secrets.INFRACOST_API_KEY }}
 
-    # - name: Post Infracost comment
-    #   uses: infracost/actions/comment@v1
-    #   with:
-    #     path: /tmp/infracost.json
-    #     behavior: update
+    - name: Generate Infracost JSON
+      run: infracost breakdown --path plan.json --format json --out-file infracost.json
+      working-directory: ${{ env.working-directory }}
+
+    - name: Post Infracost comment
+      uses: infracost/actions/comment@v1
+      with:
+        path: infracost.json
+        behavior: update
 
     # - name: Terraform Validate
     #   id: terraformValidate
