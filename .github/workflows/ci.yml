@@ -45,21 +45,6 @@ jobs:
     #     terraform apply $TF_PLAN
     #   working-directory: ${{ env.TF_WORKING_DIRECTORY }}
 
-    - name: Setup Infracost
-      uses: infracost/actions/setup@v1
-      with:
-        api-key: ${{ secrets.INFRACOST_API_KEY }}
-
-    - name: Generate Infracost JSON
-      run: infracost breakdown --path plan.json --format json --out-file infracost.json
-      working-directory: ${{ env.working-directory }}
-
-    - name: Post Infracost comment
-      uses: infracost/actions/comment@v1
-      with:
-        path: infracost.json
-        behavior: update
-
     # - name: Terraform Validate
     #   id: terraformValidate
     #   run: |-
