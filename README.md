@@ -35,16 +35,10 @@ Now the Storage account and container are created you need to update the terrafo
 ## Provision Infra with Terraform
 
 1. Terraform init
-``` terraform init -var-file=deployment/demo.tfvars  ```
+``` terraform init -var-file=deployment/devops.tfvars -backend-config="resource_group_name=Ortelius-administrator" -backend-config="storage_account_name=orteliusinfrastate" -backend-config="container_name=prod" -backend-config="key=prod.tfstate"  ```
 
 3. Terraform Plan
-``` terraform plan -var-file=deployment/demo.tfvars ```
+``` terraform plan -var-file=deployment/devops.tfvars ```
 
 4. Terraform Apply
-``` terraform apply -var-file=deployment/demo.tfvars ```
-
-cd src && terraform init -var-file=deployment/ortelius/devops/prod.tfvars -backend-config="resource_group_name=devops-prod" -backend-config="storage_account_name=orteliusdevops" -backend-config="container_name=infrastate" -backend-config="key=ortelius-devops.tfstate"
-
-terraform plan -var-file=deployment/devopstfvars 
-
-terraform apply -var-file=deployment/devops.tfvars 
+``` terraform apply -var-file=deployment/devops.tfvars ```
