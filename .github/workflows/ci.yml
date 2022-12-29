@@ -18,14 +18,14 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-
-    - name: Terraform validate
-      run: terraform validate
-      working-directory: ${{ env.TF_WORKING_DIRECTORY }}
     
     - name: Terraform Init
       run: |-
         terraform init -var-file=deployment/devops.tfvars -backend-config="resource_group_name=Ortelius-administrator" -backend-config="storage_account_name=orteliusinfrastate" -backend-config="container_name=prod" -backend-config="key=prod.tfstate"
+      working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+
+    - name: Terraform validate
+      run: terraform validate
       working-directory: ${{ env.TF_WORKING_DIRECTORY }}
         
     - name: Generate TFSEC report
