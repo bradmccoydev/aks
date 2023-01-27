@@ -154,3 +154,24 @@ variable "kubernetes_max_node_count" {
   type        = string
   description = "Cloud Location"
 }
+
+variable "storage_account_name" {
+  type        = string
+  description = "Storage Account Name"
+}
+  
+variable "storage_container" {
+  type        = string
+  description = "Storage contianer"
+}
+
+variable "account_tier" {
+  type        = string
+  description = "Storage Account Tier"
+}
+  
+variable "account_replication_type" {
+  type        = string
+  description = "Storage Account Replication Type"
+}
+
