@@ -37,3 +37,7 @@ kubernetes_node_disk_size     = 30
 kubernetes_initial_node_count = 1
 kubernetes_max_node_count     = 3
 
+storage_account_name          = "ortelius"
+storage_container            = "ortelius-container"
+account_tier                = "Standard"
+account_replication_type    = "GRS"
