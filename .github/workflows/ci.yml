@@ -18,14 +18,14 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-
-    - name: Terraform validate
-      run: terraform validate
-      working-directory: ${{ env.TF_WORKING_DIRECTORY }}
     
     - name: Terraform Init
       run: |-
         terraform init -var-file=deployment/devops.tfvars -backend-config="resource_group_name=Ortelius-administrator" -backend-config="storage_account_name=orteliusinfrastate" -backend-config="container_name=prod" -backend-config="key=prod.tfstate"
+      working-directory: ${{ env.TF_WORKING_DIRECTORY }}
+
+    - name: Terraform validate
+      run: terraform validate
       working-directory: ${{ env.TF_WORKING_DIRECTORY }}
         
     - name: Generate TFSEC report
@@ -39,57 +39,8 @@ jobs:
         terraform show -json $GITHUB_SHA.tfplan > plan.json
       working-directory: ${{ env.TF_WORKING_DIRECTORY }}
 
-    # - name: Terraform Apply
-    #   run: |-
-    #     TF_PLAN="$GITHUB_SHA.tfplan"
-    #     terraform apply $TF_PLAN
-    #   working-directory: ${{ env.TF_WORKING_DIRECTORY }}
-
-    - name: Setup Infracost
-      uses: infracost/actions/setup@v1
-      with:
-        api-key: ${{ secrets.INFRACOST_API_KEY }}
-
-    - name: Generate Infracost JSON
-      run: infracost breakdown --path plan.json --format json --out-file infracost.json
-      working-directory: ${{ env.working-directory }}
-
-    - name: Post Infracost comment
-      uses: infracost/actions/comment@v1
-      with:
-        path: infracost.json
-        behavior: update
-
-    # - name: Terraform Validate
-    #   id: terraformValidate
-    #   run: |-
-    #     cd $PATH_TO_TF_FILES
-    #     terraform show -json $GITHUB_SHA.tfplan > $GITHUB_SHA.json
-    #     cp /terraform-plan-validator/app.env ./app.env
-    #     cp /terraform-plan-validator/opa-azure-policy.rego ./opa-azure-policy.rego
-
-    #     VALIDATION_PASSED=$(terraform-plan-validator check -p "$GITHUB_SHA.json" -c "azure")
-    #     SCORE=$(terraform-plan-validator opascore -p "$GITHUB_SHA.json" -c "azure")
-        
-    #     echo "::set-output name=VALIDATION_PASSED::$VALIDATION_PASSED"
-    #     echo "Validation result: $VALIDATION_PASSED"
-    #     echo "OPA score: $SCORE"
-    #     rm $GITHUB_SHA.json
-
-    # - name: Terraform Auto Apply
-    #   if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'true'
-    #   run: |-
-    #     cd $PATH_TO_TF_FILES
-    #     TF_PLAN="$GITHUB_SHA.tfplan"
-    #     echo $TF_PLAN
-    #     # terraform apply $TF_PLAN 
-    #     rm $TF_PLAN
-
-    # - name: Terraform Manual Apply
-    #   if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'false'
-    #   run: |-
-    #     cd $PATH_TO_TF_FILES
-    #     TF_PLAN="$GITHUB_SHA.tfplan"
-    #     echo $TF_PLAN
-    #     # terraform apply $TF_PLAN 
-    #     rm $TF_PLAN
+    - name: Terraform Apply
+      run: |-
+        TF_PLAN="$GITHUB_SHA.tfplan"
+        terraform apply $TF_PLAN
+      working-directory: ${{ env.TF_WORKING_DIRECTORY }}

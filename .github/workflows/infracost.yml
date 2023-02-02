@@ -1,0 +1,44 @@
+name: Infracost
+
+on:
+  pull_request:
+    types:
+      - "opened"
+      - "synchronize"
+
+env:
+  TF_WORKING_DIRECTORY: src
+  INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
+
+jobs:
+  infracost:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Setup Infracost
+        uses: infracost/actions/setup@v2
+        with:
+          api-key: ${{ env.INFRACOST_API_KEY }}
+
+      - name: Checkout base branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+
+      # Generate Infracost JSON file as the baseline.
+      - name: Generate Infracost cost estimate baseline
+        run: |
+          infracost breakdown --config-file=${{ env.TF_WORKING_DIRECTORY }}/infracost.yml \
+                              --format=json \
+                              --out-file=/tmp/infracost-base.json
+
+      # Checkout the current PR branch so we can create a diff.
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+
+      # Generate an Infracost diff and save it to a JSON file.
+      - name: Generate Infracost diff
+        run: |
+          infracost diff --config-file=${{ env.TF_WORKING_DIRECTORY }}/infracost.yml \
+                         --format=json \
+                         --compare-to=/tmp/infracost-base.json \
+                         --out-file=/tmp/infracost.json
