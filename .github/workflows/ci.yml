@@ -39,42 +39,8 @@ jobs:
         terraform show -json $GITHUB_SHA.tfplan > plan.json
       working-directory: ${{ env.TF_WORKING_DIRECTORY }}
 
-    # - name: Terraform Apply
-    #   run: |-
-    #     TF_PLAN="$GITHUB_SHA.tfplan"
-    #     terraform apply $TF_PLAN
-    #   working-directory: ${{ env.TF_WORKING_DIRECTORY }}
-
-    # - name: Terraform Validate
-    #   id: terraformValidate
-    #   run: |-
-    #     cd $PATH_TO_TF_FILES
-    #     terraform show -json $GITHUB_SHA.tfplan > $GITHUB_SHA.json
-    #     cp /terraform-plan-validator/app.env ./app.env
-    #     cp /terraform-plan-validator/opa-azure-policy.rego ./opa-azure-policy.rego
-
-    #     VALIDATION_PASSED=$(terraform-plan-validator check -p "$GITHUB_SHA.json" -c "azure")
-    #     SCORE=$(terraform-plan-validator opascore -p "$GITHUB_SHA.json" -c "azure")
-        
-    #     echo "::set-output name=VALIDATION_PASSED::$VALIDATION_PASSED"
-    #     echo "Validation result: $VALIDATION_PASSED"
-    #     echo "OPA score: $SCORE"
-    #     rm $GITHUB_SHA.json
-
-    # - name: Terraform Auto Apply
-    #   if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'true'
-    #   run: |-
-    #     cd $PATH_TO_TF_FILES
-    #     TF_PLAN="$GITHUB_SHA.tfplan"
-    #     echo $TF_PLAN
-    #     # terraform apply $TF_PLAN 
-    #     rm $TF_PLAN
-
-    # - name: Terraform Manual Apply
-    #   if: steps.terraformValidate.outputs.VALIDATION_PASSED == 'false'
-    #   run: |-
-    #     cd $PATH_TO_TF_FILES
-    #     TF_PLAN="$GITHUB_SHA.tfplan"
-    #     echo $TF_PLAN
-    #     # terraform apply $TF_PLAN 
-    #     rm $TF_PLAN
+    - name: Terraform Apply
+      run: |-
+        TF_PLAN="$GITHUB_SHA.tfplan"
+        terraform apply $TF_PLAN
+      working-directory: ${{ env.TF_WORKING_DIRECTORY }}

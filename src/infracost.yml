@@ -1,0 +1,7 @@
+version: 0.1
+
+projects:
+  - path: src
+    terraform_workspace: devops
+    terraform_var_files:
+      - "./deployment/dev.tfvars"
