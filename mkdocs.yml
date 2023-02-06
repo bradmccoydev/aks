@@ -1,0 +1,20 @@
+site_name: 'ortelius'
+
+nav:
+  - Home: index.md
+  - ArgoCD: argocd.md
+  - cert-manager: cert-manager.md
+  - external-dns: external-dns.md
+  - ingress-nginx: ingress-nginx.md
+  - oauth2-proxy: oauth2-proxy.md
+  - keycloak: keycloak.md
+  - backstage: backstage.md
+  - postgresql: postgresql.md
+  - kube-prometheus-stack: kube-prometheus-stack.md
+  - loki-stack: loki-stack.md
+  - jaeger: jaeger.md
+  - grafana: grafana.md
+  - opentelemetry-collector: opentelemetry-collector.md
+
+plugins:
+  - techdocs-core
